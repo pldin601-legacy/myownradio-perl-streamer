@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+
+my $process="morserver\.pl";
+
+my @ps = `ps ax -o pid,command=`;
+
+foreach (@ps) {
+  ($pid,$_) = m/\s*(\d*)\s*(.*)/;
+  push @pids, $pid if (m/$process/g);
+}
+
+if ($#pids>-1) 
+{
+  print "$process is running with pid(s): @pids\n"; exit 0; 
+}
+else 
+{
+  print "$process is not running\n"; exit 1; 
+}
+

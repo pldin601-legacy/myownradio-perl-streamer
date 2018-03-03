@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+
+use FindBin qw($RealBin);
+
+my $process="morserver\.pl";
+
+my @ps = `ps ax -o pid,command=`;
+
+foreach (@ps) {
+  ($pid,$_) = m/\s*(\d*)\s*(.*)/;
+  push @pids, $pid if (m/$process/g);
+}
+
+if ($#pids>-1)
+{
+  print "trying to kill $process process...";
+  if(! system("kill @pids")) {
+    print "OK\n";
+    exit 0; }
+  else {
+    print "Failed\n";
+    exit 1; }
+}
+else
+{
+  print "$process is not running\n";
+  exit 0;
+}
+

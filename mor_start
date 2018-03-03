@@ -1,0 +1,26 @@
+#!/usr/bin/perl
+
+use FindBin qw($RealBin);
+
+my $process="morserver\.pl";
+my $procdir=$RealBin;
+
+
+my @ps = `ps ax -o pid,command=`;
+
+foreach (@ps) {
+  ($pid,$_) = m/\s*(\d*)\s*(.*)/;
+  push @pids, $pid if (m/$process/);
+}
+
+if ($#pids>-1) {
+  print "$process is running with pid(s): @pids\n";
+} else {
+  if (! system("$procdir/$process &")) {
+    print "$process is started\n";
+    exit 0;
+  } else {
+    print "$process is not started!\n";
+    exit 1;
+  }
+}
